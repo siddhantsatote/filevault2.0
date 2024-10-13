@@ -3,18 +3,16 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const path = require('path');
 
 const app = express();
-const path = require("path"); 
 const port = 3000;
 
 // MongoDB connection
 const connectDB = async () => {
     try {
-        await mongoose.connect(`mongodb+srv://satotesiddhant:W0YPzS4ljznO20JC@filevault.ff69n.mongodb.net/mydb`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        await mongoose.connect('mongodb+srv://satotesiddhant:W0YPzS4ljznO20JC@filevault.ff69n.mongodb.net/mydb');
         console.log(`Connected to DB at ${mongoose.connection.host}`);
     } catch (error) {
         console.error(`Database connection error: ${error.message}`);
@@ -26,14 +24,21 @@ connectDB();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // Change 'public' to your static directory
-app.set("view engine", "ejs");
-app.set("views", path.resolve("views"));
+app.set('view engine', 'ejs');
+app.set('views', path.resolve('views'));
+
+// MongoDB session store setup
+const store = new MongoDBStore({
+    uri: 'mongodb+srv://satotesiddhant:W0YPzS4ljznO20JC@filevault.ff69n.mongodb.net/mydb',
+    collection: 'sessions',
+});
 
 // Session Configuration
 app.use(session({
     secret: 'your-secret-key', // Change this to a random string
     resave: false,
     saveUninitialized: true,
+    store: store, // Use the MongoDB store
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
@@ -64,7 +69,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
     res.render('login');
 });
 
@@ -136,6 +141,7 @@ app.post('/logout', (req, res) => {
     });
 });
 
+// Start server
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

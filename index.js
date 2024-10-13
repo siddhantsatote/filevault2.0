@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 
 const app = express();
+const path = require("path"); 
 const port = 3000;
 
 // MongoDB connection
@@ -25,8 +26,8 @@ connectDB();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // Change 'public' to your static directory
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set("view engine", "ejs");
+app.set("views", path.resolve("views"));
 
 // Session Configuration
 app.use(session({

@@ -44,7 +44,7 @@ app.use(session({
 
 // Dummy user for authentication
 const USERNAME = 'admin';
-const PASSWORD = 'password'; // Change this to a secure password
+const PASSWORD = 'pass'; // Change this to a secure password
 
 // Authentication Middleware
 const isAuthenticated = (req, res, next) => {
@@ -127,6 +127,24 @@ app.post('/delete/:id', isAuthenticated, async (req, res) => {
         res.redirect('/upload');
     } catch (error) {
         console.error(`Error deleting file: ${error.message}`);
+        res.status(500).send('Internal server error');
+    }
+});
+
+//Download 
+app.get('/download/:id', async (req, res) => {
+    try {
+        const file = await FileModel.findById(req.params.id);
+        if (!file) {
+            return res.status(404).send('File not found');
+        }
+        res.set({
+            'Content-Type': file.fileType,
+            'Content-Disposition': `attachment; filename="${file.fileName}"`,
+        });
+        res.send(file.fileData);
+    } catch (error) {
+        console.error(`Error downloading file: ${error.message}`);
         res.status(500).send('Internal server error');
     }
 });

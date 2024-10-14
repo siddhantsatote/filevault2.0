@@ -4,121 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload File</title>
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-      }
-
-      .container {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-      }
-
-      .gallery {
-        flex: 2;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .preview-section {
-        flex: 1;
-        margin-left: 20px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        width: 400px;
-        height: 500px;
-        overflow-y: auto;
-      }
-
-      h1 {
-        text-align: center;
-        color: #333;
-      }
-
-      form {
-        margin: 20px 0;
-        display: flex;
-        justify-content: center;
-      }
-
-      input[type="file"] {
-        margin-right: 10px;
-      }
-
-      button {
-        padding: 10px 15px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      button:hover {
-        background-color: #218838;
-      }
-
-      .card {
-        background-color: white;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        margin: 15px;
-        padding: 15px;
-        width: 200px;
-        text-align: center;
-        transition: transform 0.3s;
-        cursor: pointer;
-      }
-
-      .card:hover {
-        transform: scale(1.05);
-      }
-
-      .file-icon {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 10px;
-      }
-
-      .card p {
-        margin: 5px 0;
-      }
-
-      .button-group {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      /* Preview section */
-      .preview-section img,
-      .preview-section embed,
-      .preview-section iframe {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      .preview-section p {
-        margin: 10px 0;
-        color: #555;
-      }
-    </style>
+    <link rel="stylesheet" href="/styles/uploadfile.css" />
   </head>
   <body>
-    <h1>Upload a File</h1>
+    <%- include('header.ejs') %>
 
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <input type="file" name="file" required />
-      <button type="submit">Upload</button>
+    <form
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"
+      id="uploadForm"
+    >
+      <!-- Hidden File Input -->
+      <input type="file" name="file" id="fileInput" required />
+
+      <!-- Custom Upload Button -->
+      <button type="button" class="custom-button" id="uploadButton">
+        <span>
+          <svg
+            height="24"
+            width="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" fill="currentColor"></path>
+          </svg>
+          New
+        </span>
+      </button>
     </form>
 
     <div class="container">
@@ -153,12 +67,12 @@
 
           <h3>File <%= index + 1 %>:</h3>
           <p>File Name: <%= file.fileName %></p>
-          <p>File Size: 
-            <%= (file.fileSize >= 1048576) ? (file.fileSize / 1048576).toFixed(2) + ' MB' : 
-                (file.fileSize >= 1024) ? (file.fileSize / 1024).toFixed(2) + ' KB' : 
-                file.fileSize + ' bytes' %>
+          <p>
+            File Size: <%= (file.fileSize >= 1048576) ? (file.fileSize /
+            1048576).toFixed(2) + ' MB' : (file.fileSize >= 1024) ?
+            (file.fileSize / 1024).toFixed(2) + ' KB' : file.fileSize + ' bytes'
+            %>
           </p>
-           
 
           <div class="button-group">
             <a href="/download/<%= file._id %>" class="btn btn-primary"
@@ -195,12 +109,12 @@
           return bytes + " bytes";
         }
       }
-    
+
       // JavaScript to handle file preview
       function previewFile(fileType, fileData, fileName, fileSize, fileId) {
         const previewContent = document.getElementById("preview-content");
         previewContent.innerHTML = ""; // Clear existing preview content
-    
+
         if (fileType.includes("image")) {
           const img = document.createElement("img");
           img.src = `data:${fileType};base64,${fileData}`;
@@ -218,17 +132,34 @@
           message.textContent = "Cannot preview this file type.";
           previewContent.appendChild(message);
         }
-    
+
         const name = document.createElement("p");
         name.textContent = `File Name: ${fileName}`;
         previewContent.appendChild(name);
-    
+
         const size = document.createElement("p");
         size.textContent = `File Size: ${formatFileSize(fileSize)}`; // Use the formatFileSize function
         previewContent.appendChild(size);
       }
+
+      // Trigger file input when custom button is clicked
+      document
+        .getElementById("uploadButton")
+        .addEventListener("click", function () {
+          document.getElementById("fileInput").click(); // Simulate file input click
+        });
+
+      // Auto-submit form when a file is selected
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function () {
+          // Check if a file has been selected
+          if (this.files.length > 0) {
+            document.getElementById("uploadForm").submit(); // Auto-submit the form
+          }
+        });
     </script>
-    
+
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"

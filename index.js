@@ -27,6 +27,8 @@ app.use(express.static('public')); // Change 'public' to your static directory
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('views'));
 
+app.use(express.static(path.join(__dirname, "public")));
+
 // MongoDB session store setup
 const store = new MongoDBStore({
     uri: 'mongodb+srv://satotesiddhant:W0YPzS4ljznO20JC@filevault.ff69n.mongodb.net/mydb',

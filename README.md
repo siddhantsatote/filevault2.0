@@ -48,8 +48,8 @@ Before running the project, make sure you have the following installed:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/filevault-2.0.git
-   cd filevault-2.0
+   git clone https://github.com/yourusername/filevault2.0.git
+   cd filevault2.0
    ```
 
 2. **Install Dependencies**

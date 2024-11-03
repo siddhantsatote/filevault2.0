@@ -77,6 +77,17 @@ app.get("/", (req, res) => {
   res.render("login");
 });
 
+const user = { username: "sidd", password: "password123" };
+
+// Handle login requests
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    if (username === user.username && password === user.password) {
+        res.redirect('/upload'); // Redirect to the upload page
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
 
 app.get("/upload", isAuthenticated, async (req, res) => {
   const files = await FileModel.find({});

@@ -1,166 +1,40 @@
-/* Base Styles for Dark Theme */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #1a1a1a; /* Dark background */
-  color: #eaeaea; /* Light text */
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1e1e1e;
+  font-family: "Courier New", Courier, monospace;
+  color: #00ff7f;
   margin: 0;
 }
 
-.container {
-  display: flex;
-  flex-direction: row;
-  padding: 0rem 2rem 0rem 2rem;
-}
-
-.gallery {
-  flex: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-height: 550px;
-  overflow-y: scroll;
-  padding: 10px;
-  border: 1px solid #333; /* Darker border */
-  border-radius: 10px;
-  background-color: #2a2a2a; /* Darker background */
-}
-
-/* Scrollbar Styling for Dark Theme */
-.gallery::-webkit-scrollbar {
-  width: 8px;
-}
-
-.gallery::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 5px;
-}
-
-.gallery::-webkit-scrollbar-thumb:hover {
-  background-color: #777;
-}
-
-.preview-section {
-  flex: 1;
-  margin-left: 20px;
-  padding: 20px;
-  background-color: #333; /* Dark background */
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  width: 400px;
-  height: 500px;
-  overflow-y: auto;
-}
-
-/* Scrollbar Styling for Preview Section */
-.preview-section::-webkit-scrollbar {
-  width: 8px;
-}
-
-.preview-section::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 5px;
-}
-
-.preview-section::-webkit-scrollbar-thumb:hover {
-  background-color: #777;
-}
-
-h1 {
-  text-align: center;
-  color: #eaeaea; /* Light text */
-}
-
-form {
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  width: 10%;
-}
-
-/* Custom Button in Dark Theme */
-.custom-button {
-  border: 2px solid #0071e2;
-  background-color: #0071e2;
-  color: #eaeaea; /* Light text */
-  border-radius: 0.9em;
-  cursor: pointer;
-  padding: 0.8em 1.2em 0.8em 1em;
-  transition: all ease-in-out 0.2s;
-  font-size: 16px;
-}
-
-.custom-button span {
-  color: #eaeaea; /* Light text */
-  font-weight: 600;
-}
-
-.custom-button:hover {
-  background-color: #005bb5;
-}
-
-.card {
-  background-color: #2a2a2a;
-  color: #eaeaea;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  margin: 15px;
-  padding: 15px;
-  width: 225px;
-  text-align: center;
-  transition: transform 0.3s;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.file-icon {
-  width: 100px;
-  height: 100px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  color: #ddd;
-  margin: 5px 0;
-  overflow: hidden;
-}
-
-/* Button Group Styling */
-.button-group a,
-.button-group form button {
-  background-color: #2a2a2a;
-  color: #eaeaea;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.button-group a:hover,
-.button-group form button:hover {
-  background-color: #3a3a3a;
-}
-
-.button-group a:disabled,
-.button-group form button:disabled {
-  background-color: #2a2a2a;
-  color: #666;
-}
-
-.button-group a:focus,
-.button-group form button:focus {
-  outline: 1px solid #0071e2;
-}
-
-/* Preview Section */
-.preview-section img,
-.preview-section embed,
-.preview-section iframe {
+.terminal-container {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  max-width: 600px;
+  padding: 10px;
+  border-radius: 8px;
 }
 
-.preview-section p {
-  color: #ddd;
-  margin: 10px 0;
+.terminal {
+  display: flex;
+  flex-direction: column;
+}
+
+.output {
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+#terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #00ff7f;
+  font-size: 16px;
+  width: 100%;
+}
+
+#terminal-input::placeholder {
+  color: #555;
 }

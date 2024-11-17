@@ -14,58 +14,6 @@
       </div>
     </div>
     <script src="/scripts/login.js"></script>
+    <script src="/api/login.js"></script>
   </body>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const output = document.getElementById("output");
-      const terminalInput = document.getElementById("terminal-input");
-      let passwordEntered = ""; // Variable to keep track of the password
-
-      // Function to add output to terminal
-      function addOutput(text) {
-        output.innerHTML += text + "<br>";
-        output.scrollTop = output.scrollHeight; // Scroll to bottom
-      }
-
-      // Function to handle user input
-      terminalInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-          const input = terminalInput.value;
-          terminalInput.value = ""; // Clear input field
-
-          if (!output.innerHTML.includes("Username:")) {
-            addOutput(`Username: ${input}`);
-            addOutput("Enter your password:");
-          } else if (!output.innerHTML.includes("Password:")) {
-            // Store the entered password
-            passwordEntered += input; // Append the input to passwordEntered
-            addOutput(`Password: ${"*".repeat(passwordEntered.length)}`); // Display password as hashes
-            handleLogin(passwordEntered); // Pass the actual password to handleLogin
-          }
-        }
-      });
-
-      // Simulate login logic
-      function handleLogin(password) {
-        // Replace 'password123' with your actual password for testing
-        const validPassword = "password123";
-        if (password === validPassword) {
-          addOutput("Login successful! Redirecting...");
-          // You can redirect or load the upload page here
-          setTimeout(() => {
-            window.location.href = "/upload"; // Redirect after 2 seconds
-          }, 2000);
-        } else {
-          addOutput("Invalid password. Try again.");
-          passwordEntered = ""; // Reset passwordEntered for next attempt
-          addOutput("Enter your password:");
-        }
-      }
-
-      // Initial prompt
-      addOutput("Welcome to the terminal login.");
-      addOutput("Enter your username:");
-    });
-  </script>
 </html>

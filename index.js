@@ -9,13 +9,18 @@ const path = require("path");
 const app = express();
 const port = 3000;
 
+const user = {
+  username: 'kali',
+  password: 'pass'
+};
+
 // MongoDB connection
 const connectDB = async () => {
   try {
     await mongoose.connect(
       "mongodb+srv://satotesiddhant:W0YPzS4ljznO20JC@filevault.ff69n.mongodb.net/mydb"
     );
-    console.log(`Connected to DB at ${mongoose.connection.host}`);
+    console.log(`Connected to DB`);
   } catch (error) {
     console.error(`Database connection error: ${error.message}`);
   }
@@ -25,7 +30,8 @@ connectDB();
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public")); // Change 'public' to your static directory
+app.use(bodyParser.json()); // Add this to parse JSON in request bodies
+app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.set("views", path.resolve("views"));
 
@@ -48,14 +54,12 @@ app.use(
   })
 );
 
-// Change this to a secure password
-
 // Authentication Middleware
 const isAuthenticated = (req, res, next) => {
   if (req.session.authenticated) {
     return next();
   }
-  res.redirect("/login");
+  res.redirect("/");
 };
 
 // File Storage Setup
@@ -73,40 +77,22 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("login");
-});
+app.get("/", (req, res) => res.render("login"));
 
-const user = { username: "sidd", password: "password123" };
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
 
-// Handle login requests
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    if (username === user.username && password === user.password) {
-        res.redirect('/upload'); // Redirect to the upload page
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
+  if (username === user.username && password === user.password) {
+    req.session.authenticated = true; // Set session authentication
+    res.json({ success: true, message: 'Login successful!' });
+  } else {
+    res.json({ success: false, message: 'Invalid credentials' });
+  }
 });
 
 app.get("/upload", isAuthenticated, async (req, res) => {
   const files = await FileModel.find({});
   res.render("uploadfile", { files: files });
-});
-
-// Route for image preview
-app.get("/file/:id", async (req, res) => {
-  try {
-    const file = await FileModel.findById(req.params.id);
-    if (!file) {
-      return res.status(404).send("File not found");
-    }
-    res.set("Content-Type", file.fileType);
-    res.send(file.fileData);
-  } catch (error) {
-    console.error(`Error fetching file: ${error.message}`);
-    res.status(500).send("Internal server error");
-  }
 });
 
 app.post(
@@ -123,7 +109,6 @@ app.post(
       });
 
       await file.save();
-      console.log(`File saved: ${file.fileName}`);
       res.redirect("/upload");
     } catch (error) {
       console.error(`Error saving file: ${error.message}`);
@@ -135,7 +120,6 @@ app.post(
 app.post("/delete/:id", isAuthenticated, async (req, res) => {
   try {
     await FileModel.findByIdAndDelete(req.params.id);
-    console.log(`File deleted: ${req.params.id}`);
     res.redirect("/upload");
   } catch (error) {
     console.error(`Error deleting file: ${error.message}`);
@@ -143,7 +127,6 @@ app.post("/delete/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-//Download
 app.get("/download/:id", async (req, res) => {
   try {
     const file = await FileModel.findById(req.params.id);
@@ -161,13 +144,12 @@ app.get("/download/:id", async (req, res) => {
   }
 });
 
-// Logout route
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.redirect("/upload");
     }
-    res.redirect("/login");
+    res.redirect("/");
   });
 });
 
